@@ -1,0 +1,118 @@
+{{ block content }}
+<style type="text/css">
+    #root {
+    width=100%;
+    background-color: white;
+    }
+    #left_s {
+    float: left;
+    width: 600px;
+    }
+    #rigth_s {
+    margin-left: auto;
+    margin-right: auto;
+    float: right;
+    background-color: #ccc;
+    }
+    .grid-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-gap: 20px;
+    }
+</style>
+
+
+
+<div style="align-items: center;justify-content: center;display: flex;">
+{{if ronda <= 2}}
+    <h3>RONDA DE PRUEBA</h3>
+{{else}}
+    {{if ronda <= 7}}
+        <h3>RONDA {{rondatitle}}: Primavera</h3>
+    {{else}}
+        <h3>RONDA {{rondatitle}}: Verano</h3>
+    {{endif}}
+{{endif}}
+
+</div>
+<hr>
+
+<div class="grid-container">
+    <div class="grid-child purple">
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <p style="font-size: 20px">
+                <strong>AUN NO SE ASIGNAN LOS TURNOS</strong>
+            </p>
+        </div>
+
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <p>
+                HOY NECESITA <b>{{ player.demand }}</b> HORAS DE RIEGO.
+            </p>
+        </div>
+        <div id="rect" style="margin: 10px 30px ; align-items: center;justify-content: center;display: flex;">
+            <svg height="100" width="420">
+                <rect style="fill:white; stroke:black" width="400px" height="50px" x="10" y="35"/>
+                {{if ronda <= 2}}
+                    <rect style="fill:#9177a8;" width="{{demandrect}}px" height="20px" x="10" y="65"/>
+                {{else}}
+                    {{if ronda <= 7}}
+                        <rect style="fill:#5bd062;" width="{{demandrect}}px" height="20px" x="10" y="65"/>
+                    {{else}}
+                        <rect style="fill:#d8bf1f;" width="{{demandrect}}px" height="20px" x="10" y="65"/>
+                        <!--rect style="fill:#a82108;" width="{{demandrect}}px" height="20px" x="10" y="55"/-->
+
+                    {{endif}}
+                {{endif}}
+
+                <line style="stroke: red; stroke-width: 3; stroke-dasharray:4" x1="210"; x2="210"; y1="35"; y2="85" />
+                <text width="10px" x="0px" y="30px" style="stroke: red;">00</text>
+                <text width="10px" x="200px" y="30px" style="stroke: red;">12</text>
+                <text width="10px" x="150px" y="12px" style="stroke: red;">cambio de turno</text>
+                <text width="10px" x="400px" y="30px" style="stroke: red;">24</text>
+                <text width="10px" x="100px" y="82px" style="stroke: black;">{{player.demand}}</text>
+            </svg>
+        </div>
+
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <p style="font-size: 18px">
+                Si a usted le tocara el PRIMER TURNO cuantas horas regaría?
+            </p>
+        </div>
+
+        <div style="align-items: center;justify-content: center;display: flex;">
+        {{ formfield_errors 'kept' }}
+        </div>
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <input style="width: 5%; box-sizing: content-box; border: solid gray 1px; background: #D7D6D6" class="form-control" id="id_kept" name="kept" size="20">
+            Horas
+        </div>
+        <br>
+
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <button class="otree-btn-next btn btn-primary">CONTINUAR</button>
+            <style>
+                .otree-btn-next {
+                    display: inline-block;
+                }
+            </style>
+        </div>
+    </div>
+    <div class="grid-child green">
+        <div style="width:100px">
+        <p>Ganancia Esperada para la Temporada</p>
+        </div>
+        <div id="rect" style="align-items: left;justify-content: left; display:flex; ">
+            <svg height="400" width="100">
+                <rect style="fill:white; stroke:black" width="30px" height="300px" x="10" y="10"/>
+                <rect style="fill:#CCF0E3; stroke:black" width="30px" height="{{gananciarect}}px" x="10" y="{{ygananciarect}}"/>
+                <text width="30px" x="45px" y="{{ygananciatext}}">${{fpay|to0}}</text>
+
+            </svg>
+        </div>
+
+
+    </div>
+</div>
+
+{{ endblock }}

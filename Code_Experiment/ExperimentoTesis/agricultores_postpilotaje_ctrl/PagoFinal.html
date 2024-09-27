@@ -1,0 +1,14 @@
+{{ block title }}Pago Final de la Temporada{{ endblock }}
+{{ block content }}
+
+    <h3>
+        Usted terminó la temporada con una ganancia total de: <b>{{player.finalpayment|to0}}</b>
+    </h3>
+    <br>
+    <h3>
+        Ahora pasaremos a la última etapa, donde le pediremos que conteste unas breves preguntas.
+    </h3>
+    <br>
+    {{next_button}}
+
+{{ endblock }}

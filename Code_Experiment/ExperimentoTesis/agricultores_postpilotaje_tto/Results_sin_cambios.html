@@ -1,0 +1,282 @@
+{{ block content }}
+<style type="text/css">
+    #root {
+    width=100%;
+    background-color: white;
+    }
+    #left_s {
+    float: left;
+    width: 600px;
+    }
+    #rigth_s {
+    margin-left: auto;
+    margin-right: auto;
+    float: right;
+    background-color: #ccc;
+    }
+    .grid-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-gap: 20px;
+    }
+    /* Callout box - fixed position at the bottom of the page */
+    .callout {
+      position: fixed;
+      width:100%;
+      background: #9dd6f5;
+      font-size: 20px;
+      color: white;
+    }
+
+    /* Callout header */
+    .callout-header {
+      padding: 50px 50px;
+      background: #5286bd;
+      font-size: 20px;
+      color: white;
+    }
+
+    /* Callout container/body */
+    .callout-container {
+      padding: 15px;
+      background-color: #9dd6f5;
+      color: black
+    }
+
+    /* Close button */
+    .closebtn {
+      position: absolute;
+      top: -10px;
+      right: 5px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    /* Change color on mouse-over */
+    .closebtn:hover {
+      color: lightgrey;
+    }
+    /* Callout box 2 - fixed position at the bottom of the page */
+    .callout2 {
+      width:100%;
+      background: #87847d;
+      font-size: 20px;
+      color: white;
+    }
+
+    /* Callout header */
+    .callout-header2 {
+      padding: 15px 15px;
+      background: #87847d;
+      font-size: 20px;
+      color: white;
+    }
+
+    /* Callout container/body */
+    .callout-container2 {
+      padding: 15px;
+      background-color: #cfcece;
+      color: black
+    }
+
+</style>
+<script>
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+
+<div style="align-items: center;justify-content: center;display: flex;">
+{{if ronda <= 2}}
+    <h3>RESULTADOS RONDA DE PRUEBA</h3>
+{{else}}
+    <h3>RESULTADOS RONDA {{rondatitle}}</h3>
+{{endif}}
+</div>
+<hr>
+
+<div class="grid-container">
+    <div class="grid-child purple">
+
+    <div style="align-items: center;justify-content: center;display: flex;">
+        <p style="font-size: 20px">
+        {{if player.turno == 1}}
+            LE TOCÓ EL <strong>PRIMER TURNO</strong>
+        {{endif}}
+        {{if player.turno == 2}}
+            LE TOCÓ EL <strong>SEGUNDO TURNO</strong>
+        {{endif}}
+        </p>
+    </div>
+
+    <div style="align-items: center;justify-content: center;display: flex;">
+        <p>NECESITABA <b>{{player.demand}}</b> HORAS</p>
+    </div>
+    {{if player.turno == 1}}
+    <div style="align-items: center;justify-content: center;display: flex;">
+        <p>DECIDIÓ USAR <b>{{player.kept}}</b> HORAS</p>
+    </div>
+    {{endif}}
+    {{if player.turno == 2}}
+        <div style="align-items: center;justify-content: center;display: flex;">
+            <p>SU VECINO
+            {{if left == 12}}
+                <b>CUMPLIÓ</b> SU TURNO Y
+            {{else}}
+                <b>NO CUMPLIÓ</b> SU TURNO Y
+            {{endif}}
+            LE DEJÓ <b>{{left}}</b> HORAS</p>
+        </div>
+
+    {{endif}}
+    <div >
+    {{if player.fiscalizacion }}
+        {{if player.turno == 1}}
+            <div class="callout2" style="align-items: center;justify-content: center;display: flex;">
+                <div class="callout-header2">
+                    LE HA TOCADO FISCALIZACIÓN
+                </div>
+                <div class="callout-container2">
+                    {{if player.multa > 0}}
+                    Por extraer agua más de 12 horas se le ha cobrado una multa de {{player.multa|to0}}
+                    {{else}}
+                    Como ha respetado sus horas de turno no se le ha aplicado multa
+                    {{endif}}
+                </div>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
+        {{endif}}
+    {{endif}}
+    </div>
+    {{if player.turno == 1}}
+
+    <div id="rect" style="margin: 30x 30px;align-items: center;justify-content: center;display: flex;">
+            <svg height="100" width="420">
+                <rect style="fill:#fbfccf; " width="400px" height="50px" x="10" y="25"/>
+                <rect style="fill:#d7dbdf;" width="{{hriegorect}}px" height="50px" x="10" y="25"/>
+                {{if group.round_number <= 2}}
+                    <rect style="fill:#9177a8;" width="{{demandrect}}px" height="20px" x="10" y="55"/>
+                {{else}}
+                    {{if group.round_number <= 7}}
+                        <rect style="fill:#5bd062;" width="{{demandrect}}px" height="20px" x="10" y="55"/>
+                    {{else}}
+                        <rect style="fill:#d8bf1f;" width="{{demandrect}}px" height="20px" x="10" y="55"/>
+                    {{endif}}
+                {{endif}}
+                <line style="stroke: red; stroke-width: 3; stroke-dasharray:4" x1="210"; x2="210"; y1="25"; y2="75" />
+                <text width="10px" x="0px" y="20px" style="stroke: red;">00</text>
+                <text width="10px" x="200px" y="20px" style="stroke: red;">12</text>
+                <text width="10px" x="400px" y="20px" style="stroke: red;">24</text>
+                <text width="10px" x="{{texthriego}}" y="40" style="stroke: black;">{{player.kept}}</text>
+                <text width="10px" x="{{texthrvecino}}" y="40" style="stroke: black;">{{left}}</text>
+                {{ if player.deficit > 0 }}
+                <!--text width="10px" x="{{textdeficit}}" y="72" style="stroke: blue;">{{player.deficit}}</text-->
+                {{endif}}
+                <line style="stroke: black; stroke-width: 2; stroke-dasharray:2" x1="{{linehriego}}"; x2="{{linehriego}}"; y1="25"; y2="75" />
+            </svg>
+        </div>
+
+    {{endif}}
+
+    {{if player.turno == 2}}
+
+        <div style="align-items: center;justify-content: center;display: flex; border-color:blue">
+        {{if group.round_number == player.evento_externo1}}
+            <div class="callout" style="align-items: center;justify-content: center;display: flex;">
+                <div class="callout-header">
+                ALERTA
+                </div>
+                <div class="callout-container">
+                <p>Hoy hubo problemas en el río y el canal estuvo cerrado algunas horas durante su turno.</p>
+                </div>
+
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+
+            </div>
+        {{endif}}
+        {{if group.round_number == player.evento_externo2}}
+            <div class="callout" style="align-items: center;justify-content: center;display: flex;">
+                <div class="callout-header">
+                ALERTA
+                </div>
+                <div class="callout-container">
+                <p>Hoy hubo problemas en el río y el canal estuvo cerrado algunas horas durante su turno.</p>
+                </div>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
+        {{endif}}
+        </div>
+
+        <div id="rect" style="margin: 30x 30px; align-items: center;justify-content: center;display: flex;">
+            <svg height="100" width="420">
+                <rect style="fill:#d7dbdf; border: black 1px;" width="400px" height="50px" x="10" y="25"/>
+                <rect style="fill:#fbfccf;" width="{{hriegorect}}px" height="50px" x="{{offshriego}}" y="25"/>
+                {{if group.round_number <= 2}}
+                    <rect style="fill:#9177a8;" width="{{demandrect}}px" height="20px" y="55" x="{{offsetrect}}"/>
+                {{else}}
+                    {{if group.round_number <= 7}}
+                        <rect style="fill:#5bd062;" width="{{demandrect}}px" height="20px" y="55" x="{{offsetrect}}"/>
+                    {{else}}
+                        <rect style="fill:#d8bf1f;" width="{{demandrect}}px" height="20px" y="55" x="{{offsetrect}}"/>
+                    {{endif}}
+                {{endif}}
+
+                <line style="stroke: red; stroke-width: 3; stroke-dasharray:4" x1="210"; x2="210"; y1="25"; y2="75" />
+                <text width="10px" x="0px" y="20px" style="stroke: red;">00</text>
+                <text width="10px" x="200px" y="20px" style="stroke: red;">12</text>
+                <text width="10px" x="400px" y="20px" style="stroke: red;">24</text>
+                <text width="10px" x="{{texthriego}}" y="40" style="stroke: black;">{{left}}</text>
+                <text width="10px" x="{{texthrvecino}}" y="40" style="stroke: black;">{{player.kept_vecino}}</text>
+                {{ if player.deficit > 0 }}
+                <!--text width="10px" x="{{textdeficit}}" y="72" style="stroke: blue;">{{player.deficit}}</text-->
+                {{endif}}
+                <line style="stroke: black; stroke-width: 2; stroke-dasharray:2" x1="{{linehriego}}"; x2="{{linehriego}}"; y1="25"; y2="75" />
+
+            </svg>
+        </div>
+
+    {{endif}}
+    <div style="align-items: center;justify-content: center;display: flex;">
+        <p style="color:#FF0000; border-style: solid; border-color: #FF0000;">
+                {{if player.deficit == 0 }}
+                NO LE FALTÓ AGUA
+                {{else}}
+                {{if player.deficit == 1 }}
+                LE FALTÓ <strong>{{ player.deficit }}</strong> HORA
+                = <strong>${{player.perdida|to0}}</strong> EN PÉRDIDAS
+                {{else}}
+                LE FALTARON <strong>{{ player.deficit }}</strong> HORAS
+                = <strong>${{player.perdida|to0}}</strong> EN PÉRDIDAS
+                {{endif}}
+                {{endif}}
+        </p>
+    </div>
+
+    <div style="align-items: center;justify-content: center;display: flex;">
+        <button class="otree-btn-next btn btn-primary">Continuar</button>
+        <style>
+            .otree-btn-next {
+                display: inline-block;
+            }
+        </style>
+    </div>
+    </div>
+    <div class="grid-child green">
+        <div style="width:100px">
+        <p>Ganancia Esperada para la Temporada</p>
+        </div>
+        <div id="rect" style="align-items: left;justify-content: left; display:flex; ">
+            <svg height="400" width="100">
+                <rect style="fill:white; stroke:black" width="30px" height="300px" x="10" y="10"/>
+                <rect style="fill:#CCF0E3; stroke:black" width="30px" height="{{gananciarect}}px" x="10" y="{{ygananciarect}}"/>
+                <text width="30px" x="45px" y="{{ygananciatext}}">${{fpay|to0}}</text>
+
+            </svg>
+        </div>
+    </div>
+</div>
+
+
+{{ endblock }}

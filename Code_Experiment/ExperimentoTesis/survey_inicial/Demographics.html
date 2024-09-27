@@ -1,0 +1,22 @@
+{{ block title }}Cuestionario{{ endblock }}
+{{ block content }}
+
+    <p>
+        Por favor, responda las siguientes preguntas, su sinceridad es importante para el estudio.
+    </p>
+    <p>
+        Recuerde que las respuestas son anónimas.
+    </p>
+
+    {{ formfield 'edad'}}
+    {{ formfield 'genero'}}
+    {{ formfield 'escolaridad'}}
+    {{if C.ESTUDIANTES == 1}}
+        {{ formfield 'conocimiento_derechos'}}
+    {{else}}
+        {{ formfield 'derecho'}}
+        {{ formfield 'hectareas'}}
+    {{endif}}
+    {{ next_button }}
+
+{{ endblock }}
